@@ -1,0 +1,13 @@
+{
+    "name": "home-maker",
+        "description": "A thing to control my home",
+        "version": "0.1.0",
+        "author": "Trevor Hall",
+        "contributors": [
+            ],
+        "license": "MIT",
+        "dependencies": {
+            "express": "4.14.1",
+            "jade": "1.11.0"
+        }
+}

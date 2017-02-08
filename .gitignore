@@ -1,0 +1,5 @@
+# Files
+*.sw[a-z]
+
+# Directories
+node_modules/
