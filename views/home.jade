@@ -1,1 +1,164 @@
-h1 welcome #{content.dat}
+doctype html
+html(lang='en')
+    link(href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
+    link(href='//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', rel='stylesheet')
+
+    script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js')
+
+    style.
+        body {
+            background: rgba(0, 0, 0, 0.86);
+            height: 100%;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .row.green .col-lg-2 {
+            background: #2E862E;
+        }
+
+        .row.blue .col-lg-2 {
+            background: rgb(71, 71, 255);
+        }
+
+        .col-lg-2 {
+            border: 2px solid rgba(0, 0, 0, 0.86);
+            padding: 40px 15px;
+        }
+
+        .col-lg-2.center {
+            text-align: center;
+        }
+
+        .col-lg-2.pointer {
+            cursor: pointer;
+        }
+
+        i.fa {
+            font-size: 2em;
+            display: block;
+            text-align: center;
+        }
+
+        .col-lg-2 i.fa, .col-lg-2 span {
+            color: white;
+        }
+
+        i.fa span {
+            padding-left: 10px;
+        }
+
+    script(type='text/javascript').
+        var main = function() {
+            var config = {
+                weather: {
+                    city_id: '5787829',
+                    key: '6fe9edcc59da1a68cd186be6f7aa3783'
+                }
+            };
+
+            var $get = function get(url, data, callback) {
+                $.ajax({
+                    url: url,
+                    data: data,
+                    success: callback 
+                });
+            };
+
+            var weather = function weather() {
+                $get(
+                    'http://api.openweathermap.org/data/2.5/forecast',
+                    {
+                        id: config.weather.city_id,
+                        appid: config.weather.key
+                    },
+                    function(data) {
+                        var K = data.list[0].main.temp;
+                        var F = ((K-273.15)*1.8)+32;
+
+                        $('.weather').text(parseInt(F) + String.fromCharCode(parseInt('00B0', 16)));
+                    }
+                );
+            };
+
+            var time = function time() {
+                var d = new Date();
+                var hour = d.getHours();
+                var min = d.getMinutes();
+                var suff = 'AM';
+
+                if (hour > 12) {
+                    hour = hour - 12;
+                    suff = 'PM'
+                }
+
+                $('.clock').text(hour + ':' + min + ' ' + suff);
+            };
+
+            var date = function date() {
+                var d = new Date();
+                var date = (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear();
+
+                $('.calendar').text(date);
+            };
+
+            var battery = function battery() {
+                navigator.getBattery().then(function(battery) {
+                    var level = battery.level;
+                    $('.battery').text( (level * 100) + '%' );
+                })
+            };
+
+            var music = function music() {
+                $('.fa-music').parent().click(function() {
+                    window.location = 'https://www.pandora.com'; 
+                });
+            }
+
+            weather();
+            time();
+            date();
+            battery();
+            music();
+        };
+    body
+        .button-container
+            .row.green
+                .col-lg-offset-2.col-md-offset-2.col-sm-offset-2.col-lg-2.col-md-2.col-sm-2
+                    i.fa.fa-sun-o
+                        span.weather
+                .col-lg-2.col-md-2.col-sm-2
+                    i.fa.fa-clock-o
+                        span.clock
+                .col-lg-2.col-md-2.col-sm-2
+                    i.fa.fa-calendar 
+                        span.calendar
+                .col-lg-2.col-md-2.col-sm-2
+                    i.fa.fa-battery-full
+                        span.battery
+                    
+            .row.blue
+                .col-lg-offset-2.col-md-offset-2.col-sm-offset-2.col-lg-2.col-md-2.col-sm-2.pointer.center
+                    i.fa.fa-music
+                .hide.col-lg-2.col-md-2.col-sm-2
+                    | content
+                .hide.col-lg-2.col-md-2.col-sm-2
+                    | content
+                .hide.col-lg-2.col-md-2.col-sm-2
+                    | content
+
+            .hide.row
+                .col-lg-offset-2.col-md-offset-2.col-sm-offset-2.col-lg-2.col-md-2.col-sm-2
+                    | content
+                .col-lg-2.col-md-2.col-sm-2
+                    | content
+                .col-lg-2.col-md-2.col-sm-2
+                    | content
+                .col-lg-2.col-md-2.col-sm-2
+                    | content
+        
+        script(type='text/javascript').
+            main();

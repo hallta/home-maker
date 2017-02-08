@@ -1,6 +1,9 @@
-var express = require('express') 
-var app = express()
-var path = require('path')
+var express = require('express') ;
+var app = express();
+var path = require('path');
+var morgan = require('morgan');
+
+app.use(morgan('short'))
 
 app.set( 'views', path.join(__dirname, 'views') );
 app.set( 'view engine', 'jade' );
@@ -8,10 +11,10 @@ app.set( 'view engine', 'jade' );
 app.get('/', function(req, res) {
     res.render('home.jade', {
         content: { dat: 'trevor'}
-    })
-})
+    });
+});
 
-console.log('Starting server...')
-app.listen(3000)
+console.log('Starting server...');
+app.listen(3000);
 
-console.log('Server started!')
+console.log('Server started!');
