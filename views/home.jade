@@ -51,12 +51,25 @@ html(lang='en')
             padding-left: 10px;
         }
 
+        p.hm-weather {
+            font-size: 8px;
+            padding: 0px;
+            margin-bottom: -46px;
+            padding-top: 10px;
+        }
+
     script(type='text/javascript').
         var main = function() {
             var config = {
                 weather: {
                     city_id: '5787829',
                     key: '6fe9edcc59da1a68cd186be6f7aa3783'
+                }
+            };
+
+            var store = {
+                weather: {
+                    index: -1
                 }
             };
 
@@ -69,17 +82,33 @@ html(lang='en')
             };
 
             var weather = function weather() {
+                var makeWeather = function makeWeather(data) {
+                    store.weather.index = store.weather.index + 1;
+                    var index = store.weather.index;
+                    var K = data.list[index].main.temp;
+                    var F = ((K-273.15)*1.8)+32;
+
+                    $('.weather')
+                        .text(parseInt(F) + String.fromCharCode(parseInt('00B0', 16)))
+                        .end().unbind('click').click(function() {
+                            weather(data);
+                        })
+                    ;
+
+                    if (index > 0) {
+                        $('.weather').append($('<p class="hm-weather"></p>').text(data.list[index].dt_txt));
+                    }
+                };
+
                 $get(
                     'http://api.openweathermap.org/data/2.5/forecast',
                     {
                         id: config.weather.city_id,
                         appid: config.weather.key
                     },
-                    function(data) {
-                        var K = data.list[0].main.temp;
-                        var F = ((K-273.15)*1.8)+32;
-
-                        $('.weather').text(parseInt(F) + String.fromCharCode(parseInt('00B0', 16)));
+                    function(d) {
+                        makeWeather(d, store.weather.index);
+                        store.weather.data = d;
                     }
                 );
             };
@@ -161,4 +190,9 @@ html(lang='en')
                     | content
         
         script(type='text/javascript').
+            //setInterval(main, 60000);
             main();
+
+
+
+
