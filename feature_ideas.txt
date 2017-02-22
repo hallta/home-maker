@@ -1,4 +1,0 @@
-1. Voice Recognition
-  * https://syl22-00.github.io/pocketsphinx.js/
-  * https://github.com/sreuter/node-speakable (uses google api)
-  * https://shapeshed.com/html5-speech-recognition-api/
