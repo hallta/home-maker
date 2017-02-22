@@ -71,15 +71,9 @@ html(lang='en')
 
     script(type='text/javascript').
         var main = function() {
-            var config = {
-                weather: {
-                    city_id: '5787829',
-                    key: '6fe9edcc59da1a68cd186be6f7aa3783'
-                }
-            };
+            var config = !{config}; 
 
             var store = {
-                config: !{config},
                 weather: {
                     index: -1
                 },
@@ -164,7 +158,7 @@ html(lang='en')
             };
 
             var photos = function photos() {
-                var dbx = new Dropbox({ accessToken: '' });
+                var dbx = new Dropbox({ accessToken: config.dropbox.key });
                 var pics = [];
 
                 dbx.filesListFolder({path: ''})
