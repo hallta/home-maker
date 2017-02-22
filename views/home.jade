@@ -214,7 +214,7 @@ html(lang='en')
                     var res = event.results;
                     var wut = res[res.length -1][0].transcript;
 
-                    if (wut.toLowerCase().match('(?:hey|hi).*there')) {
+                    if (wut.toLowerCase().match('(?:hey|hi).*' + config.speech_name)) {
                         enabled = true;
                     }
                     else if ( enabled ) {
