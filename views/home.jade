@@ -76,6 +76,18 @@ html(lang='en')
             }
         };
 
+        var Utter = {
+            say: function(wut) {
+                var utterance = new SpeechSynthesisUtterance(wut);
+                var voices = window.speechSynthesis.getVoices().filter(function(v){ return v.lang == "en-US"});
+                // TODO: voices isn't returning ????
+                utterance.voice = voices[25]; 
+                window.speechSynthesis.speak(utterance);
+
+                Log.log('Said "'+ wut +'"');
+            }
+        };
+
         var main = function() {
             var config = !{config}; 
 
@@ -215,6 +227,7 @@ html(lang='en')
                     var wut = res[res.length -1][0].transcript;
 
                     if (wut.toLowerCase().match('(?:hey|hi).*' + config.speech_name)) {
+                        Utter.say('Yes?');
                         enabled = true;
                     }
                     else if ( enabled ) {
