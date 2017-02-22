@@ -1,5 +1,6 @@
 # Files
 *.sw[a-z]
+app_config.json
 
 # Directories
 node_modules/
