@@ -5,6 +5,7 @@ html(lang='en')
 
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js')
+    script(src='//unpkg.com/dropbox/dist/Dropbox-sdk.min.js')
 
     style.
         body {
@@ -59,6 +60,15 @@ html(lang='en')
             padding-top: 10px;
         }
 
+        .photo-container div div img {
+            margin-top: 10px;
+            border: 5px solid #4e4e4e;
+            max-height: 450px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
     script(type='text/javascript').
         var main = function() {
             var config = {
@@ -69,8 +79,12 @@ html(lang='en')
             };
 
             var store = {
+                config: !{config},
                 weather: {
                     index: -1
+                },
+                photos: {
+                    interval: undefined
                 }
             };
 
@@ -147,15 +161,60 @@ html(lang='en')
                 $('.fa-music').parent().click(function() {
                     window.location = 'https://www.pandora.com'; 
                 });
-            }
+            };
+
+            var photos = function photos() {
+                var dbx = new Dropbox({ accessToken: 'SpYgOK-oZXQAAAAAAAB4Oj02R3_cESuFn9yT9KDNPyzsE2PqQpITYsM8AzDPnci2' });
+                var pics = [];
+
+                dbx.filesListFolder({path: ''})
+                    .then(function(res) {
+                        for ( i in res.entries ) {
+                            dbx.filesGetTemporaryLink({ path: res.entries[i].path_display })
+                                .then(function(r) {
+                                    pics.push(r.link);
+                                }).catch(function(e) {
+                                    alert(e);
+                                });
+                        }
+
+                    }).catch(function(error) {
+                        alert(error);
+                    });
+
+                $('.photo-show').unbind('click').click(function() {
+                    $('.button-container').fadeOut('fast', function() {
+                        $('.photo-container').fadeIn('fast').removeClass('hidden').click(function() {
+                            clearInterval(store.photos.interval);
+                            $('.photo-container').fadeOut('fast', function() {
+                                $('.button-container').fadeIn('fast');
+                            });
+                        });
+
+                        var i = 0;
+                        var cyclePhotos = function cyclePhotos() {
+                            $('img.photo-holster').attr('src', pics[i]).attr('_index', i);
+                            i = ( i + 1 ) % pics.length;
+                        };
+
+                        store.photos.interval = setInterval(cyclePhotos, 5000)
+                        cyclePhotos();
+                    });
+                });
+            };
 
             weather();
             time();
             date();
             battery();
             music();
+            photos();
         };
     body
+        .photo-container.hidden
+            .row
+                .col-lg-offset-2.col-md-offset-2.col-sm-offset-2.col-lg-8.col-md-8.col-sm-8
+                    img.photo-holster(src='')
         .button-container
             .row.green
                 .col-lg-offset-2.col-md-offset-2.col-sm-offset-2.col-lg-2.col-md-2.col-sm-2.pointer
@@ -174,7 +233,7 @@ html(lang='en')
             .row.blue
                 .col-lg-offset-2.col-md-offset-2.col-sm-offset-2.col-lg-2.col-md-2.col-sm-2.pointer.center
                     i.fa.fa-music
-                .col-lg-2.col-md-2.col-sm-2.pointer
+                .col-lg-2.col-md-2.col-sm-2.pointer.photo-show
                     i.fa.fa-camera-retro
                 .hide.col-lg-2.col-md-2.col-sm-2
                     | content
