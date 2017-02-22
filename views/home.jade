@@ -70,6 +70,12 @@ html(lang='en')
         }
 
     script(type='text/javascript').
+        var Log = {
+            log: function(msg) {
+                console.log('[log] :: ' + msg);
+            }
+        };
+
         var main = function() {
             var config = !{config}; 
 
@@ -197,6 +203,44 @@ html(lang='en')
                 });
             };
 
+            var speechInit = function speechInit() {
+
+                var enabled = false;
+                var inMode = false;
+
+                var recognition = new webkitSpeechRecognition();
+                recognition.continuous = true;
+                recognition.onresult = function(event) { 
+                    var res = event.results;
+                    var wut = res[res.length -1][0].transcript;
+
+                    if (wut.toLowerCase().match('(?:hey|hi).*there')) {
+                        enabled = true;
+                    }
+                    else if ( enabled ) {
+                        if ( wut.match('(?:open|show).*(?:pics|pictures|photos)') ) {
+                            $('.photo-show').click();    
+                            inMode = true;
+                        }
+                        else if ( wut.match('play.*music') ) {
+                            $('.fa-music').click();
+                        }
+
+                        enabled = false;
+                    }
+                    else if ( inMode ) {
+                        if ( wut.match('sto[kp]') ) {
+                            $('.photo-container').click();
+                        }
+                    }
+
+                    Log.log('wut: "' + wut + '" (enabled: '+enabled+')(inMode:'+inMode+')');
+                }
+
+                recognition.start();
+            };
+
+            speechInit();
             weather();
             time();
             date();
