@@ -1,6 +1,3 @@
-1. Picture viewer
-  * connect to google photos?
-  * connect to dropbox? 
 1. Voice Recognition
   * https://syl22-00.github.io/pocketsphinx.js/
   * https://github.com/sreuter/node-speakable (uses google api)
