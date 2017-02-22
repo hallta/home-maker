@@ -48,6 +48,7 @@ html(lang='en')
         }
 
         i.fa span {
+            font-family: arial;
             padding-left: 10px;
         }
 
@@ -90,8 +91,9 @@ html(lang='en')
 
                     $('.weather')
                         .text(parseInt(F) + String.fromCharCode(parseInt('00B0', 16)))
-                        .end().unbind('click').click(function() {
-                            weather(data);
+                        .parent().parent()
+                        .unbind('click').click(function() {
+                            makeWeather(data);
                         })
                     ;
 
@@ -156,7 +158,7 @@ html(lang='en')
     body
         .button-container
             .row.green
-                .col-lg-offset-2.col-md-offset-2.col-sm-offset-2.col-lg-2.col-md-2.col-sm-2
+                .col-lg-offset-2.col-md-offset-2.col-sm-offset-2.col-lg-2.col-md-2.col-sm-2.pointer
                     i.fa.fa-sun-o
                         span.weather
                 .col-lg-2.col-md-2.col-sm-2
