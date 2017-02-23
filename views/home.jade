@@ -76,20 +76,41 @@ html(lang='en')
             }
         };
 
-        var Utter = {
-            say: function(wut) {
-                var utterance = new SpeechSynthesisUtterance(wut);
-                var voices = window.speechSynthesis.getVoices().filter(function(v){ return v.lang == "en-US"});
-                // TODO: voices isn't returning ????
-                utterance.voice = voices[25]; 
-                window.speechSynthesis.speak(utterance);
+        var Error = {
+            "throw": function(msg) {
+                if (typeof msg == "object") {
+                    msg = JSON.stringify(msg);
+                }
 
-                Log.log('Said "'+ wut +'"');
+                alert(msg);
             }
         };
 
+        var Utter = function Utter() {
+            var voices = undefined;
+            window.speechSynthesis.onvoiceschanged = function() {
+                voices = window.speechSynthesis.getVoices().filter(function(v){ return v.lang == "en-US"});
+            };
+
+            var iterations = {
+                question_yes: ['Yes?', "What's up?", 'What can I do you for?']
+            };
+
+            return {
+                say: function(wut) {
+                    wut = iterations[wut][ Math.floor(Math.random() * iterations[wut].length) ];
+
+                    var utterance = new SpeechSynthesisUtterance(wut);
+                    utterance.voice = voices[25];
+                    window.speechSynthesis.speak(utterance);
+
+                    Log.log('Said "'+ wut +'"');
+                }
+            }
+        }();
+
         var main = function() {
-            var config = !{config}; 
+            var config = !{config};
 
             var store = {
                 weather: {
@@ -104,7 +125,7 @@ html(lang='en')
                 $.ajax({
                     url: url,
                     data: data,
-                    success: callback 
+                    success: callback
                 });
             };
 
@@ -171,7 +192,7 @@ html(lang='en')
 
             var music = function music() {
                 $('.fa-music').parent().click(function() {
-                    window.location = 'https://www.pandora.com'; 
+                    window.location = 'https://www.pandora.com';
                 });
             };
 
@@ -186,12 +207,12 @@ html(lang='en')
                                 .then(function(r) {
                                     pics.push(r.link);
                                 }).catch(function(e) {
-                                    alert(e);
+                                    Error.throw(e);
                                 });
                         }
 
                     }).catch(function(error) {
-                        alert(error);
+                        Error.throw(error);
                     });
 
                 $('.photo-show').unbind('click').click(function() {
@@ -222,17 +243,17 @@ html(lang='en')
 
                 var recognition = new webkitSpeechRecognition();
                 recognition.continuous = true;
-                recognition.onresult = function(event) { 
+                recognition.onresult = function(event) {
                     var res = event.results;
                     var wut = res[res.length -1][0].transcript;
 
                     if (wut.toLowerCase().match('(?:hey|hi).*' + config.speech_name)) {
-                        Utter.say('Yes?');
+                        Utter.say('question_yes');
                         enabled = true;
                     }
                     else if ( enabled ) {
                         if ( wut.match('(?:open|show).*(?:pics|pictures|photos)') ) {
-                            $('.photo-show').click();    
+                            $('.photo-show').click();
                             inMode = true;
                         }
                         else if ( wut.match('play.*music') ) {
@@ -275,12 +296,12 @@ html(lang='en')
                     i.fa.fa-clock-o
                         span.clock
                 .col-lg-2.col-md-2.col-sm-2
-                    i.fa.fa-calendar 
+                    i.fa.fa-calendar
                         span.calendar
                 .col-lg-2.col-md-2.col-sm-2
                     i.fa.fa-battery-full
                         span.battery
-                    
+
             .row.blue
                 .col-lg-offset-2.col-md-offset-2.col-sm-offset-2.col-lg-2.col-md-2.col-sm-2.pointer.center
                     i.fa.fa-music
@@ -300,10 +321,12 @@ html(lang='en')
                     | content
                 .col-lg-2.col-md-2.col-sm-2
                     | content
-        
+
         script(type='text/javascript').
-            setInterval(main, 60000);
-            main();
+            $(document).ready(function() {
+                setInterval(main, 60000);
+                main();
+            });
 
 
 
