@@ -133,11 +133,17 @@ html(lang='en')
                 var makeWeather = function makeWeather(data) {
                     store.weather.index = store.weather.index + 1;
                     var index = store.weather.index;
-                    var K = data.list[index].main.temp;
-                    var F = ((K-273.15)*1.8)+32;
+                    var dat = data.list[index];
+                    var K = dat.main.temp;
+                    var F = parseInt(((K - 273.15) * 1.8) + 32);
+
+                    store.weather.working_description = F + " degrees, with " +
+                        dat.weather[0].description +
+                        " and winds of " + dat.wind.speed + " miles per hour"
+                    ; 
 
                     $('.weather')
-                        .text(parseInt(F) + String.fromCharCode(parseInt('00B0', 16)))
+                        .text(F + String.fromCharCode(parseInt('00B0', 16)))
                         .parent().parent()
                         .unbind('click').click(function() {
                             makeWeather(data);
@@ -186,7 +192,7 @@ html(lang='en')
             var battery = function battery() {
                 navigator.getBattery().then(function(battery) {
                     var level = battery.level;
-                    $('.battery').text( (level * 100) + '%' );
+                    $('.battery').text( parseInt(level * 100) + '%' );
                 })
             };
 
@@ -252,18 +258,37 @@ html(lang='en')
                         enabled = true;
                     }
                     else if ( enabled ) {
+
+                        // Show picture show
                         if ( wut.match('(?:open|show).*(?:pics|pictures|photos)') ) {
                             $('.photo-show').click();
                             inMode = true;
                         }
+
+                        // Play music
                         else if ( wut.match('play.*music') ) {
                             $('.fa-music').click();
                         }
 
+                        // Weather stuff
+                        else if ( wut.match('(?:what(?:s)?.*the.*)weather') ) {
+                            Utter.say(store.weather.working_description);
+                            inMode = true;
+                        }
+
                         enabled = false;
                     }
+
+                    // When in a mode of discussion ... 
                     else if ( inMode ) {
-                        if ( wut.match('sto[kp]') ) {
+
+                        // Next weather stream
+                        if ( wut.match('next') ) {
+                            $('.weather').click();
+                        }
+
+                        // Stop the discussion
+                        else if ( wut.match('sto[kp]') ) {
                             $('.photo-container').click();
                         }
                     }
