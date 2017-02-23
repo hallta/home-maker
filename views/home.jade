@@ -120,7 +120,8 @@ html(lang='en')
                 },
                 photos: {
                     interval: undefined
-                }
+                },
+                news: {}
             };
 
             var $get = function get(url, data, callback) {
@@ -166,6 +167,30 @@ html(lang='en')
                     function(d) {
                         makeWeather(d, store.weather.index);
                         store.weather.data = d;
+                    }
+                );
+            };
+
+            var news = function news() {
+                $get(
+                    'https://newsapi.org/v1/articles?source=the-next-web',
+                    {
+                        sortBy: 'latest',
+                        apiKey: config.news.key
+                    },
+                    function(d) {
+                        store.news.articles = d.articles;
+                        store.news.index = 0;
+
+                        var buildNews = function buildNews() {
+                            var title = store.news.articles[ store.news.index ].title;
+                            $('.news').text(title);
+
+                            store.news.index = ( store.news.index + 1 ) % store.news.articles.length;
+                        };
+
+                        setInterval(buildNews, 10000);
+                        buildNews();
                     }
                 );
             };
@@ -285,6 +310,11 @@ html(lang='en')
                             Utter.say(store.time.current_time);
                         }
 
+                        // What's the news?
+                        else if ( wut.match('(?:what(?:s)?.*the.*)news') ) {
+                            // TODO >> make this work
+                        }
+
                         enabled = false;
                     }
 
@@ -310,6 +340,7 @@ html(lang='en')
 
             speechInit();
             weather();
+            news();
             time();
             date();
             battery();
@@ -346,14 +377,15 @@ html(lang='en')
                 .hide.col-lg-2.col-md-2.col-sm-2
                     | content
 
-            .hide.row
+            .row.green
                 .col-lg-offset-2.col-md-offset-2.col-sm-offset-2.col-lg-2.col-md-2.col-sm-2
+                    i.fa.fa-newspaper-o
+                        span.news
+                .hide.col-lg-2.col-md-2.col-sm-2
                     | content
-                .col-lg-2.col-md-2.col-sm-2
+                .hide.col-lg-2.col-md-2.col-sm-2
                     | content
-                .col-lg-2.col-md-2.col-sm-2
-                    | content
-                .col-lg-2.col-md-2.col-sm-2
+                .hide.col-lg-2.col-md-2.col-sm-2
                     | content
 
         script(type='text/javascript').
