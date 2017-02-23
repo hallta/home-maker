@@ -113,6 +113,8 @@ html(lang='en')
             var config = !{config};
 
             var store = {
+                time: {},
+
                 weather: {
                     index: -1
                 },
@@ -180,6 +182,8 @@ html(lang='en')
                 }
 
                 $('.clock').text(hour + ':' + min + ' ' + suff);
+
+                store.time.current_time = hour + ' ' + min + ' ' + suff.split('').join(' '); 
             };
 
             var date = function date() {
@@ -274,6 +278,11 @@ html(lang='en')
                         else if ( wut.match('(?:what(?:s)?.*the.*)weather') ) {
                             Utter.say(store.weather.working_description);
                             inMode = true;
+                        }
+
+                        // What time is it?
+                        else if ( wut.match('(?:what.*)time(?:is.*it)') ) {
+                            Utter.say(store.time.current_time);
                         }
 
                         enabled = false;
