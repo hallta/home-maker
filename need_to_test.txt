@@ -1,3 +1,4 @@
+2c29bb3 snagging news feeds
 e56f06b will respond to time commands
 a9ea254 respond to weather commands
 e396ca0 loads retort voices properly, random generation of voice responses
