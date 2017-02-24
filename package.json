@@ -3,13 +3,17 @@
         "description": "A thing to control my home",
         "version": "0.1.0",
         "author": "Trevor Hall",
-        "contributors": [
-            ],
+        "contributors": [],
+        "scripts": {
+            "start": "node_modules/forever/bin/forever start -a -l home-maker.log -p log/ -w --watchIgnore '**' main.js",
+            "stop": "node_modules/forever/bin/forever stop main.js"
+        },
         "license": "MIT",
         "dependencies": {
             "express": "4.14.1",
             "jade": "1.11.0",
             "morgan": "1.8.0",
-            "dropbox": "2.5.1"
+            "dropbox": "2.5.1",
+            "forever": "0.15.3"
         }
 }
