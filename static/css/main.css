@@ -19,7 +19,7 @@ body {
     background: rgb(71, 71, 255);
 }
 
-.row div {
+.force-size {
     width: 245px;
     height: 112px;
 }
