@@ -1,6 +1,7 @@
 # Files
 *.sw[a-z]
 app_config.json
+npm-debug.log
 
 # Directories
 node_modules/
