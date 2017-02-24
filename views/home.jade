@@ -70,6 +70,18 @@ html(lang='en')
         }
 
     script(type='text/javascript').
+        var store = {
+            time: {},
+
+            weather: {
+                index: -1
+            },
+            photos: {
+                interval: undefined
+            },
+            news: {}
+        };
+
         var Log = {
             log: function(msg) {
                 console.log('[log] :: ' + msg);
@@ -98,7 +110,9 @@ html(lang='en')
 
             return {
                 say: function(wut) {
-                    wut = iterations[wut][ Math.floor(Math.random() * iterations[wut].length) ];
+                    if ( wut in iterations ) {
+                        wut = iterations[wut][ Math.floor(Math.random() * iterations[wut].length) ];
+                    }
 
                     var utterance = new SpeechSynthesisUtterance(wut);
                     utterance.voice = voices[25];
@@ -109,20 +123,28 @@ html(lang='en')
             }
         }();
 
+        var News;
+        News = {
+            buildNews: function buildNews() {
+                var title = store.news.articles[ store.news.index ].title;
+                $('.news').text(title);
+
+                store.news.index = ( store.news.index + 1 ) % store.news.articles.length;
+            },
+
+            sayNews: function sayNews(incr) {
+                if (incr) News.buildNews();
+                store.news._index = store.news.index;
+                Utter.say( store.news.articles[ store.news._index ].title );
+            },
+
+            openArticle: function openNews() {
+                window.location = store.news.articles[ store.news._index ].url;
+            }
+        };
+
         var main = function() {
             var config = !{config};
-
-            var store = {
-                time: {},
-
-                weather: {
-                    index: -1
-                },
-                photos: {
-                    interval: undefined
-                },
-                news: {}
-            };
 
             var $get = function get(url, data, callback) {
                 $.ajax({
@@ -182,15 +204,8 @@ html(lang='en')
                         store.news.articles = d.articles;
                         store.news.index = 0;
 
-                        var buildNews = function buildNews() {
-                            var title = store.news.articles[ store.news.index ].title;
-                            $('.news').text(title);
-
-                            store.news.index = ( store.news.index + 1 ) % store.news.articles.length;
-                        };
-
-                        setInterval(buildNews, 10000);
-                        buildNews();
+                        setInterval(News.buildNews, 10000);
+                        News.buildNews();
                     }
                 );
             };
@@ -289,30 +304,31 @@ html(lang='en')
                     else if ( enabled ) {
 
                         // Show picture show
-                        if ( wut.match('(?:open|show).*(?:pics|pictures|photos)') ) {
+                        if ( wut.match('(?:pics|pictures|photos)') ) {
                             $('.photo-show').click();
                             inMode = true;
                         }
 
                         // Play music
-                        else if ( wut.match('play.*music') ) {
+                        else if ( wut.match('music') ) {
                             $('.fa-music').click();
                         }
 
                         // Weather stuff
-                        else if ( wut.match('(?:what(?:s)?.*the.*)weather') ) {
+                        else if ( wut.match('weather') ) {
                             Utter.say(store.weather.working_description);
                             inMode = true;
                         }
 
                         // What time is it?
-                        else if ( wut.match('(?:what.*)time(?:is.*it)') ) {
+                        else if ( wut.match('time') ) {
                             Utter.say(store.time.current_time);
                         }
 
                         // What's the news?
-                        else if ( wut.match('(?:what(?:s)?.*the.*)news') ) {
-                            // TODO >> make this work
+                        else if ( wut.match('news') ) {
+                            News.sayNews();
+                            inMode = true;
                         }
 
                         enabled = false;
@@ -322,8 +338,19 @@ html(lang='en')
                     else if ( inMode ) {
 
                         // Next weather stream
-                        if ( wut.match('next') ) {
+                        if ( wut.match('forecast') ) {
                             $('.weather').click();
+                            Utter.say(store.weather.working_description);
+                        }
+
+                        // Next news stream
+                        else if ( wut.match('next') ) {
+                            News.sayNews(true);
+                        }
+
+                        // Open the article
+                        else if ( wut.match('open') ) {
+                            News.openArticle();
                         }
 
                         // Stop the discussion
