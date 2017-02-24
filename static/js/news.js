@@ -18,7 +18,7 @@ News = {
     }
 };
 
-var news = function news() {
+var news = function news(config) {
     $get(
         'https://newsapi.org/v1/articles?source=the-next-web',
         {

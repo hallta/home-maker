@@ -37,14 +37,14 @@ html(lang='en')
         var config = !{config};
 
         var main = function() {
-            speechInit();
-            weather();
-            news();
-            time();
-            date();
-            battery();
-            music();
-            photos();
+            speechInit(config);
+            weather(config);
+            news(config);
+            time(config);
+            date(config);
+            battery(config);
+            music(config);
+            photos(config);
         };
     body
         .photo-container.hidden

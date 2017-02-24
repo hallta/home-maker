@@ -1,4 +1,4 @@
-var photos = function photos() {
+var photos = function photos(config) {
     var dbx = new Dropbox({ accessToken: config.dropbox.key });
     var pics = [];
 
