@@ -1,4 +1,4 @@
-var weather = function weather(config) {
+var weather = function weather() {
     var makeWeather = function makeWeather(data) {
         store.weather.index = store.weather.index + 1;
         var index = store.weather.index;

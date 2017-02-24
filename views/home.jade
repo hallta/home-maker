@@ -22,6 +22,8 @@ html(lang='en')
     script(src='js/speech.js')
 
     script(type='text/javascript').
+
+        var config = !{config};
         var store = {
             time: {},
 
@@ -34,18 +36,16 @@ html(lang='en')
             news: {}
         };
 
-        var config = !{config};
-
-        var main = function() {
-            speechInit(config);
-            weather(config);
-            news(config);
-            time(config);
-            date(config);
-            battery(config);
-            music(config);
-            photos(config);
-        };
+        $(document).ready(function() {
+            speechInit();
+            weather();
+            news();
+            time();
+            date();
+            battery();
+            music();
+            photos();
+        });
     body
         .photo-container.hidden
             .row
@@ -86,13 +86,3 @@ html(lang='en')
                     | content
                 .hide.col-lg-2.col-md-2.col-sm-2
                     | content
-
-        script(type='text/javascript').
-            $(document).ready(function() {
-                setInterval(main, 60000);
-                main();
-            });
-
-
-
-

@@ -1,4 +1,4 @@
-var time = function time(config) {
+var time = function time() {
     var d = new Date();
     var hour = d.getHours();
     var min = d.getMinutes();

@@ -1,4 +1,4 @@
-var speechInit = function speechInit(config) {
+var speechInit = function speechInit() {
 
     var enabled = false;
     var inMode = false;
