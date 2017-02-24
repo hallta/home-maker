@@ -12,6 +12,8 @@ app.set( 'view engine', 'jade' );
 fs.readFile('app_config.json', 'utf8', function(err, data) {
     if (err) console.log(err);
 
+    app.use(express.static('static'));
+
     app.get('/', function(req, res) {
         res.render('home.jade', {
             config: data 

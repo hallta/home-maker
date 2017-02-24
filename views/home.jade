@@ -2,86 +2,12 @@ doctype html
 html(lang='en')
     link(href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
     link(href='//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', rel='stylesheet')
+    link(href='css/main.css', rel='stylesheet')
 
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js')
     script(src='//unpkg.com/dropbox/dist/Dropbox-sdk.min.js')
-
-    style.
-        body {
-            background: rgba(0, 0, 0, 0.86);
-            height: 100%;
-        }
-
-        .hide {
-            display: none;
-        }
-
-        .button-container {
-            margin-top: 10px;
-        }
-
-        .row.green .col-lg-2 {
-            background: #2E862E;
-        }
-
-        .row.blue .col-lg-2 {
-            background: rgb(71, 71, 255);
-        }
-
-        .row div {
-            width: 245px;
-            height: 112px;
-        }
-
-        .col-lg-2 {
-            border: 2px solid rgba(0, 0, 0, 0.86);
-            padding: 40px 15px;
-        }
-
-        .col-lg-2.center {
-            text-align: center;
-        }
-
-        .col-lg-2.pointer {
-            cursor: pointer;
-        }
-
-        i.fa {
-            font-size: 2em;
-            display: block;
-            text-align: center;
-        }
-
-        .col-lg-2 i.fa, .col-lg-2 span {
-            color: white;
-        }
-
-        i.fa span {
-            font-family: arial;
-            padding-left: 10px;
-        }
-
-        p.hm-weather {
-            font-size: 8px;
-            padding: 0px;
-            margin-bottom: -46px;
-            padding-top: 10px;
-        }
-
-        .photo-container div div img {
-            margin-top: 10px;
-            border: 5px solid #4e4e4e;
-            max-height: 450px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        span.news {
-            font-size: 11px;
-            display: block;
-        }
+    script(src='js/log.js')
 
     script(type='text/javascript').
         var store = {
@@ -94,12 +20,6 @@ html(lang='en')
                 interval: undefined
             },
             news: {}
-        };
-
-        var Log = {
-            log: function(msg) {
-                console.log('[log] :: ' + msg);
-            }
         };
 
         var Error = {
